@@ -1,0 +1,60 @@
+<div class="divLoggin">
+    <div class="container">
+        <div class="cart-container">
+            <div class="cart-icon">
+                <a href="/carts/{{user.cart}}">
+                    <img src="/img/cart.png" alt="carrito de compras" style="width: 30px;">
+                </a>
+                <span class="cart-item-count">{{cantidadItems}}</span>
+            </div>
+            {{!-- <span class="cart-item-count">{{cartItemCount}}</span> --}}
+        </div>
+        <div class="user-session">
+            <p class="msj-session">Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong>!!!</p>
+            <p class="msj-session">{{user.rol}}</p>
+        </div>
+        <div class="logout">
+            <form id="log-out-session-Form" action="{{logout}}" method="post">
+                <input type="hidden">
+                <button class="Log-Out" type="submit">Salir</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    {{#if cartProducts.length}}
+        {{#each cartProducts}}
+        <div class="product-container">
+            <div class="product-images">
+                {{#each thumbnail}}
+                <img src="{{this}}" alt="Imagen del producto" class="product-thumbnail">
+                {{/each}}
+            </div>
+            <div class="product-details">
+                <p class="cart-product-title">{{title}}</p>
+            </div>
+            <div class="product-details">
+                <p class="product-price"><strong>Por Unidad:</strong> $ {{price}}</p>
+            </div>
+            <div class="product-details">
+                <p class="product-quantity"><strong>Cantidad:</strong> {{quantity}}</p>
+            </div>
+            <div class="product-details">
+                <p class="product-subtotal"><strong>Subtotal:</strong> $ {{subtotal}}</p>
+            </div>
+            <form action="/api/cart/remove/{{id}}" method="delete">
+                <button class="remove-from-cart-button" type="submit">Quitar</button>
+            </form>
+        </div>
+        {{/each}}
+        <div class="total-container">
+            <p class="product-subtotal"><strong>Monto Total:</strong> $ {{totalCarrito}}</p>
+        </div>
+    {{else}}
+        <div class="empty-cart-message">
+            Tu carrito está vacío. Agrega todos los productos que quieras.
+        </div>
+    {{/if}}
+</div>
+
+<script src="/js/logOutManager.js"></script>
