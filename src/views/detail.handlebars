@@ -6,7 +6,7 @@
                     <img src="/img/cart.png" alt="carrito de compras" style="width: 30px;">
                 </a>
                 <span class="cart-item-count">{{cantidadItems}}</span>
-            </div>            
+            </div>
         </div>
         <div class="user-session">
             <p class="msj-session">Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong>!!!</p>
@@ -26,14 +26,17 @@
         <p class="product-detail-description">{{product.description}}</p>
         <p class="product-detail-price"><strong>Precio:</strong> ${{product.price}}</p>
 
-        <form class="add-to-cart-form" action="{{cartUrl}}" method="post">
+        <form id="add-to-carrito" method="put" data-cid="{{cart}}" data-pid="{{product._id}}">
+            <button id="add-to-cart" class="add-to-cart-button" type="button">Agregar al Carrito</button>
+        </form>
+        {{!-- <form class="add-to-cart-form" action="{{cart}}" method="post">
             <input type="hidden" name="productId" value="{{product._id}}">
             <button class="add-to-cart-button" type="submit">Agregar al Carrito</button>
-        </form>
+        </form> --}}
     </div>
     <div class="product-images">
         {{#each product.thumbnail}}
-            <img src="{{this}}" alt="Imagen del producto" class="product-detail-image">
+        <img src="{{this}}" alt="Imagen del producto" class="product-detail-image">
         {{/each}}
     </div>
 </div>

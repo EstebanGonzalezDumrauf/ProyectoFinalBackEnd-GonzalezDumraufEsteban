@@ -8,7 +8,7 @@ import {
     cartModel
 } from '../models/cart.js';
 import {
-    authToken
+    authToken, generateProducts
 } from "../utils.js";
 import {
     getProductsOfCart
@@ -122,12 +122,36 @@ router.get('/products', checkSession, async (req, res) => {
     });
 })
 
+router.get('/mockingproducts', checkSession, async (req, res) => {
+
+    const productsMocking = [];
+
+    for (let index = 0; index < 100; index++) {
+        productsMocking.push(generateProducts());
+    }
+
+
+    // Verifica que el usuario está autenticado antes de mostrar la página de productos
+    if (req.session.user) {
+        const {
+            username,
+            isAdmin
+        } = req.session.user;
+        //const { cart } = req.user.cart;
+        //console.log(cart);
+        //console.log(req.user);
+    } else {
+        // Si el usuario no está autenticado, redirige a la página de loggin
+        return res.redirect('/');
+    }
+
+    res.send({status: 'sucess', payload: productsMocking});
+})
+
 router.get('/api/products/:pid', checkSession, async (req, res) => {
     try {
-        //console.log('Datos recibidos:', pid);
         const productId = req.params.pid;
         const producto = await productModel.findById(productId);
-
 
         const cartId = req.user.cart;
 
@@ -138,7 +162,6 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
     
         // Calcula la suma total de cantidades en el carrito
         const totalQuantity = cart ? cart.arrayCart.reduce((total, item) => total + item.quantity, 0) : 0;
-
 
         const productoLimpiado = {
             _id: productId,
@@ -159,7 +182,7 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
             product: productoLimpiado,
             cartUrl: '/cart',
             user: req.session.user, 
-            cart: cartId,
+            cart: cart._id,
             cantidadItems: totalQuantity
         });
 

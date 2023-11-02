@@ -20,7 +20,7 @@ addToCartButtons.forEach(button => {
 
         data.forEach((value, key) => obj[key] = value);
 
-        fetch(`api/carts/${cid}/products/${pid}`, {
+        fetch(`/api/carts/${cid}/products/${pid}`, {
             method: 'PUT',
             body: JSON.stringify(obj),
             headers: {
