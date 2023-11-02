@@ -1,13 +1,22 @@
-import { Router } from "express";
+import {
+    Router
+} from "express";
 import {
     productModel
 } from '../models/product.js';
 import {
     cartModel
 } from '../models/cart.js';
-import { authToken } from "../utils.js";
-import { getProductsOfCart } from '../controllers/carts.js'
-import {checkSession, checkAdmin} from "../config/passport.js";
+import {
+    authToken
+} from "../utils.js";
+import {
+    getProductsOfCart
+} from '../controllers/carts.js'
+import {
+    checkSession,
+    checkAdmin
+} from "../config/passport.js";
 
 const router = Router();
 
@@ -23,24 +32,24 @@ const privateAccess = (req, res, next) => {
     next();
 }
 
-router.get('/', publicAccess, (req, res)=> {
+router.get('/', publicAccess, (req, res) => {
     res.render('login');
 })
 
 router.get('/chat', checkSession, (req, res) => {
     res.render('chat', {});
-    })
+})
 
-router.get('/register', publicAccess, (req, res)=> {
+router.get('/register', publicAccess, (req, res) => {
     res.render('register')
 })
 
-router.get('/resetPassword', publicAccess, (req, res)=> {
+router.get('/resetPassword', publicAccess, (req, res) => {
     res.render('reset')
 })
 
 router.get('/products', checkSession, async (req, res) => {
-//router.get('/products', authToken, async (req, res) => {
+    //router.get('/products', authToken, async (req, res) => {
     const {
         page = 1
     } = req.query;
@@ -60,12 +69,17 @@ router.get('/products', checkSession, async (req, res) => {
     const prevLink = hasPrevPage ? `/products?page=${prevPage}` : null;
     const nextLink = hasNextPage ? `/products?page=${nextPage}` : null;
 
-    const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const pageNumbers = Array.from({
+        length: totalPages
+    }, (_, i) => i + 1);
 
 
     // Verifica que el usuario está autenticado antes de mostrar la página de productos
     if (req.session.user) {
-        const { username, isAdmin } = req.session.user;
+        const {
+            username,
+            isAdmin
+        } = req.session.user;
         //const { cart } = req.user.cart;
         //console.log(cart);
         //console.log(req.user);
@@ -74,9 +88,27 @@ router.get('/products', checkSession, async (req, res) => {
         return res.redirect('/');
     }
 
+
+    const productsWithCart = docs.map(product => ({
+        ...product,
+        cart: req.user.cart
+    }));
+
+
+    const cartId = req.user.cart;
+
+    // Consulta el modelo de carrito para obtener la suma total de cantidades
+    const cart = await cartModel.findOne({
+        _id: cartId
+    });
+
+    // Calcula la suma total de cantidades en el carrito
+    const totalQuantity = cart ? cart.arrayCart.reduce((total, item) => total + item.quantity, 0) : 0;
+
+
+
     res.render('index', {
-        cart: req.user.cart,
-        docs,
+        docs: productsWithCart,
         totalPages,
         hasPrevPage,
         hasNextPage,
@@ -84,9 +116,9 @@ router.get('/products', checkSession, async (req, res) => {
         prevPage,
         prevLink,
         nextLink,
-        pageNumbers, 
+        pageNumbers,
         user: req.session.user,
-        cart: req.user.cart
+        cantidadItems: totalQuantity
     });
 })
 
@@ -96,11 +128,24 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
         const productId = req.params.pid;
         const producto = await productModel.findById(productId);
 
+
+        const cartId = req.user.cart;
+
+        // Consulta el modelo de carrito para obtener la suma total de cantidades
+        const cart = await cartModel.findOne({
+            _id: cartId
+        });
+    
+        // Calcula la suma total de cantidades en el carrito
+        const totalQuantity = cart ? cart.arrayCart.reduce((total, item) => total + item.quantity, 0) : 0;
+
+
         const productoLimpiado = {
+            _id: productId,
             title: producto.title,
             description: producto.description,
             price: producto.price,
-            thumbnail: producto.thumbnail,
+            thumbnail: producto.thumbnail
         };
 
         if (!producto) {
@@ -113,7 +158,9 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
         res.render('detail', {
             product: productoLimpiado,
             cartUrl: '/cart',
-            user: req.session.user
+            user: req.session.user, 
+            cart: cartId,
+            cantidadItems: totalQuantity
         });
 
     } catch (error) {
@@ -127,13 +174,15 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
 
 router.get('/carts/:cid', checkSession, async (req, res) => {
     try {
-        const { cid } = req.params;
+        const {
+            cid
+        } = req.params;
 
         //let carrito = await cartModel.findOne({ _id: cid }).populate('arrayCart.product');
         let carrito = await getProductsOfCart(cid);
         let totalCarrito = 0;
         let cantidadItems = 0;
-        let cartItems= [];
+        let cartItems = [];
 
         if (carrito) {
             cartItems = carrito.arrayCart.map(item => {
@@ -148,7 +197,7 @@ router.get('/carts/:cid', checkSession, async (req, res) => {
                     thumbnail: item.product.thumbnail,
                     subtotal: subtotal,
                 };
-            });    
+            });
             //console.log(cartItems, totalCarrito);
         }
 

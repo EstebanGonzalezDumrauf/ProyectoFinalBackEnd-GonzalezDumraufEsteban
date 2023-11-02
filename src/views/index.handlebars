@@ -29,7 +29,7 @@
             <p class="product-title"> {{this._doc.title}}</p>
             <p class="product-price"><strong>Precio:</strong> ${{this._doc.price}}</p>
         </div>
-        <form id="add-to-carrito" method="put" data-cid="{{cart}}" data-pid="{{this._doc._id}}">
+        <form id="add-to-carrito" method="put" data-cid="{{this.cart}}" data-pid="{{this._doc._id}}">
             <button id="add-to-cart" class="add-to-cart-button" type="button">Agregar al Carrito</button>
         </form>
         <div class="product-images">
