@@ -2,13 +2,22 @@ import {
     userModel
 } from '../../models/user.js';
 import { createHash } from "../../utils.js";
+import { cartModel } from '../../models/cart.js';
 
 export const getAllUser = async () => {
     return await userModel.find();
 };
 
 export const add_User = async (newUser) => {
-    const user = userModel.create(newUser);
+    const arrayCart = [];
+    const cart = await cartModel.create({arrayCart});
+    console.log(cart);
+    newUser.cart = cart._id;
+    console.log(newUser);
+    const user = await userModel.create(newUser);
+    console.log(user);
+
+    //const cart = cartModel.create();
     return user;
 };
 
