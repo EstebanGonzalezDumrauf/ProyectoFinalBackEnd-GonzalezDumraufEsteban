@@ -14,6 +14,7 @@ import { initializePassport } from './config/passport.js';
 import { checkSession, checkAdmin } from "./config/passport.js";
 import config from './config/config.js';
 import cors from 'cors';
+import errorHandler from './middlewares/errors/index.js';
 
 import {
     Server
@@ -58,6 +59,8 @@ app.use('/api/sessions', sessionsRouter);
 app.use('/chat', chatModel);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
+
+app.use(errorHandler);
 
 const connection = MongoSingleton.getInstance();
 

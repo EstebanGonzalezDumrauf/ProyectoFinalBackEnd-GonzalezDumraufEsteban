@@ -10,51 +10,15 @@ import {
 } from '../controllers/products.js';
 import {checkSession, checkAdmin} from "../config/passport.js";
 
+
+import CustomError from '../services/errors/CustomError.js';
+import EErrors from '../services/errors/enums.js';
+import { generatePaginateErrorInfo, generateProductErrorInfo } from '../services/errors/info.js';
+
+
 const router = Router();
 
-// ESTO FUNCIONABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-// router.get('/limited', async (req, res) => {
-//     try {
-//         console.log('Datos recibidos:', req.query.limit);
-//         const cantLimit = parseInt(req.query.limit); // Obtén el valor del parámetro "limit" como número
 
-//         if (isNaN(cantLimit) || cantLimit <= 0) {
-//             return res.status(400).json({
-//                 result: 'error',
-//                 message: 'El parámetro "limit" no es un número válido o es menor o igual a cero'
-//             });
-//         }
-
-//         const productos = await productModel.find().limit(cantLimit);
-
-//         res.status(200).json({
-//             result: 'success',
-//             payload: productos
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             result: 'error',
-//             message: 'Hubo un error en el servidor'
-//         });
-//     }
-// });
-
-// router.get('/all', async (req, res) => {
-//     try {
-//         let productos = await productModel.find();
-//         res.send({
-//             result: 'sucess',
-//             payload: productos
-//         });
-
-//     } catch (error) {
-//         console.log(error);
-//     }
-
-// })
-// ESTO FUNCIONABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-///http://localhost:8080/api/products?limit=4&page=1&sort=asc
 router.get('/', async (req, res) => {
     try {
         const {
@@ -65,6 +29,14 @@ router.get('/', async (req, res) => {
         const parsedPage = parseInt(page);
 
         if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+            CustomError.createError({
+                name: 'Errores en los parámetros Limit y Page',
+                cause: generatePaginateErrorInfo({ limit, page }),
+                message: 'Los parámetros limit y page deben ser números válidos y mayores que cero', 
+                code: EErrors.INVALID_TYPES_ERROR
+            });
+
+            //revisar para crear un custom message de errors !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             return res.status(400).json({
                 result: 'error',
                 message: 'Los parámetros "limit" y "page" deben ser números válidos y mayores que cero'
@@ -110,7 +82,6 @@ router.get('/', async (req, res) => {
             payload: productos,
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             result: 'error',
             message: 'Hubo un error en el servidor',
@@ -148,7 +119,7 @@ router.get('/:pid', async (req, res) => {
 });
 
 
-router.post('/', checkAdmin, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         let {
             title,
@@ -162,6 +133,22 @@ router.post('/', checkAdmin, async (req, res) => {
         } = req.body;
 
         if (!title || !code) {
+            CustomError.createError({
+                name: 'Valores incompletos en la Incorporacion de un producto',
+                cause: generateProductErrorInfo({
+                    title,
+                    description,
+                    price,
+                    category,
+                    status,
+                    thumbnail,
+                    code,
+                    stock
+                }),
+                message: 'Falta ingresar el title o el code del producto ', 
+                code: EErrors.INVALID_TYPES_ERROR
+            });
+
             return res.send({
                 status: "Error",
                 error: 'Datos incompletos'
