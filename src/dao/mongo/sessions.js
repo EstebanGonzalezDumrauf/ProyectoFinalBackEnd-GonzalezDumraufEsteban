@@ -21,10 +21,25 @@ export const add_User = async (newUser) => {
     return user;
 };
 
+export const delete_User = async (_id) => {
+    try {
+        const user = await userModel.deleteOne(_id);
+    } catch (error) {
+        return false;
+    }
+
+    return true;
+};
+
 export const get_User = async (username) => {
     return await userModel.findOne({
         email: username
     });
+};
+
+export const get_User_By_Id = async (_id) => {
+    const user = await userModel.findById(_id);
+    return user;
 };
 
 export const reset_Pass = async (email, password) => {

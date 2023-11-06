@@ -20,7 +20,7 @@ const router = Router();
 
 
 router.get('/', async (req, res) => {
-    try {
+    //try {
         const {
             limit = 10, page = 1, query, sort
         } = req.query;
@@ -81,12 +81,12 @@ router.get('/', async (req, res) => {
             result: 'success',
             payload: productos,
         });
-    } catch (error) {
-        res.status(500).json({
-            result: 'error',
-            message: 'Hubo un error en el servidor',
-        });
-    }
+    // } catch (error) {
+    //     res.status(500).json({
+    //         result: 'error',
+    //         message: 'Hubo un error en el servidor',
+    //     });
+    // }
 });
 
 

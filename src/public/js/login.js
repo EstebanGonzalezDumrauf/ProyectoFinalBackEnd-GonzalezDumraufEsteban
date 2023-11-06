@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
 form.addEventListener('submit', e => {
     e.preventDefault();
     const data = new FormData(form);
@@ -28,22 +29,25 @@ form.addEventListener('submit', e => {
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(result => {
-        console.log(result.status); 
-        if (result.status === 200) {
-            window.location.href = '/products'; //window.location.replace('/products')
-        } 
-        
-        if (result.status === 400) {
+    }).then(response => {
+        console.log(data);
+        if (response.status === 200) {
+            response.json().then(data => {
+                if (data.payload.rol === 'usuario') {
+                    window.location.href = '/products';
+                } else {
+                    console.log(data);
+                    window.location.href = '/users';
+                }
+            });
+        } else if (response.status === 400) {
             const msjErrorLabel = document.getElementById('msjError');
-            msjErrorLabel.textContent = "Usuario no existe o password incorrecto.";
-        }
-
-        if (result.status === 401) {
+            msjErrorLabel.textContent = "Usuario no existe o la contraseña es incorrecta.";
+        } else if (response.status === 401) {
             const msjErrorLabel = document.getElementById('msjError');
-            msjErrorLabel.textContent = "Credenciales Inválidas";
+            msjErrorLabel.textContent = "Credenciales inválidas";
         }
     }).catch(error => {
         console.error('Error al realizar la solicitud:', error);
     });
-})
+});

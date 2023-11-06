@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { userModel } from "../models/user.js";
 import UserDTO from '../dao/DTOs/users.js';
-import { getSession, resetPassword, logout } from "../controllers/sessions.js"
+import { getSession, resetPassword, logout, deleteUser, getUser, getUserById } from "../controllers/sessions.js"
 import { createHash, generateToken, isValidPassword } from "../utils.js";
 import passport from "passport";
 
@@ -39,6 +39,7 @@ router.post('/login', passport.authenticate('login', { failureRedirect: '/api/se
     }
     delete req.user.password;
     req.session.user = req.user;
+    console.log(req.user);
     res.send({ status: "success", payload: req.user })
 });
 
@@ -64,6 +65,23 @@ router.post('/resetPassword', async (req, res) => {
 router.post('/logout', async (req, res) => {
     const result = await logout(req, res);
     return result;
+});
+
+router.delete('/:uid', async (req, res) => {
+    const {
+        uid
+    } = req.params;
+    const user = await getUserById(uid);
+    console.log(user, uid);
+    const IsBorrado = await deleteUser(user);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////// ver mail al usuario ///////////////////////////////////////////////////////////
+    if (IsBorrado) {
+        res.status(200).json({ message: 'Usuario eliminado' });
+    }
 });
 
 export default router;

@@ -17,6 +17,7 @@ import {
     checkSession,
     checkAdmin
 } from "../config/passport.js";
+import { getAllUser } from "../dao/mongo/sessions.js";
 
 const router = Router();
 
@@ -47,6 +48,24 @@ router.get('/register', publicAccess, (req, res) => {
 router.get('/resetPassword', publicAccess, (req, res) => {
     res.render('reset')
 })
+
+//router.get('/users', checkAdmin, async (req, res) => {
+router.get('/users', checkAdmin, async (req, res) => {
+    try {
+        let listado = []; 
+        
+        listado = await getAllUser();
+
+        if (listado) {
+            res.render('admin', { docs: listado });
+        } else {
+            res.render('admin', { listado: [] });
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 router.get('/products', checkSession, async (req, res) => {
     //router.get('/products', authToken, async (req, res) => {

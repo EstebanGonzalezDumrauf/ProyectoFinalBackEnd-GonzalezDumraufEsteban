@@ -1,4 +1,4 @@
-import { add_User, getAllUser, get_User, reset_Pass } from "../dao/mongo/sessions.js";
+import { add_User, delete_User, getAllUser, get_User, get_User_By_Id, reset_Pass } from "../dao/mongo/sessions.js";
 
 const sessions = [];
 
@@ -21,6 +21,14 @@ export const getUser = async (email) => {
     const usuarioExist = email;
     const result = await get_User(usuarioExist);
 
+    if (!result) {
+        return null;
+    }
+    return result;
+};
+
+export const getUserById = async (_id) => {
+    const result = await get_User_By_Id(_id);
     if (!result) {
         return null;
     }
@@ -63,4 +71,13 @@ export const logout = async (req, res) => {
             message: 'No hay sesión para cerrar'
         });
     }
+};
+
+
+export const deleteUser = async (_id, res) => {
+    const result = await delete_User(_id);
+    if (!result) {
+        return false
+    }
+    return true;
 };

@@ -1,0 +1,40 @@
+<body>
+    <h1>Lista de Usuarios</h1>
+    <div class="divLoggin">
+        <div class="container">
+            <div class="user-session">
+                <p class="msj-session">Bienvenido, <strong>Super Usuario Coder</strong>!!!</p>
+                <p class="msj-session">Administrador</p>
+            </div>
+            <div class="logout">
+                <form id="log-out-session-Form" action="{{logout}}" method="post">
+                    <input type="hidden">
+                    <button class="Log-Out" type="submit">Salir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <table>
+        <tbody>
+            {{#each docs}}
+            <tr>
+                <td>{{this._doc.first_name}}</td>
+                <td>{{this._doc.last_name}}</td>
+                <td>{{this._doc.email}}</td>
+                <td>{{this._doc.rol}}</td>
+                <td>
+                    <form id="delete-user" method="delete" user-id="{{this._doc._id}}">
+                        <button id="eliminar-usuario" type="button" class="remove-from-cart-button">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <form action="/accion" method="post" class="add-to-cart-form">
+        <input type="hidden" name="user_id" value="{{this._doc._id}}">
+        <button type="submit" class="add-to-cart-button">Borrar Usuarios sin Actividad</button>
+    </form>
+
+    <script src="/js/logOutManager.js"></script>
+    <script src="/js/deleteUser.js"></script>
