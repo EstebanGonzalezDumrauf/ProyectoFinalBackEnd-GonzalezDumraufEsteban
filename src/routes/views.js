@@ -19,6 +19,7 @@ import {
 } from "../config/passport.js";
 import { getAllUser } from "../dao/mongo/sessions.js";
 
+
 const router = Router();
 
 const publicAccess = (req, res, next) => {
@@ -39,6 +40,43 @@ router.get('/', publicAccess, (req, res) => {
 
 router.get('/chat', checkSession, (req, res) => {
     res.render('chat', {});
+})
+
+router.get('/loggerTest', (req, res) => {
+    let testeandoLogs = '';
+
+    req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    req.logger.debug(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    req.logger.info(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    req.logger.warning(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    req.logger.error(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    req.logger.fatal(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+
+    // if (req.logger.warning('Log Warning')) {
+    //     testeandoLogs = testeandoLogs + 'Log Warning';
+    // }
+    
+    // if (req.logger.fatal('Log Fatal')) {
+    //     testeandoLogs = testeandoLogs + '-Log Fatal';
+    // }
+
+    // if (req.logger.error('Log Error')) {
+    //     testeandoLogs = testeandoLogs + '-Log Error';
+    // }
+
+    // if (req.logger.info('Log Info')) {
+    //     testeandoLogs = testeandoLogs + '-Log Info';
+    // }
+
+    // if (req.logger.http('Log Http')) {
+    //     testeandoLogs = testeandoLogs + '-Log Http';
+    // }
+
+    // if (req.logger.debug('Log Debug')) {
+    //     testeandoLogs = testeandoLogs + '-Log Debug';
+    // }
+
+    res.send({status: 'sucess', payload: testeandoLogs});
 })
 
 router.get('/register', publicAccess, (req, res) => {

@@ -24,6 +24,8 @@ import {
 } from './models/chat.js';
 import MongoSingleton from './class/MongoSingleton.js';
 
+import { addLogger } from './utils/logger.js';
+
 const app = express();
 
 app.engine('handlebars', handlebars.engine());
@@ -51,6 +53,8 @@ app.use(session({
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(addLogger);
 
 app.use('/', viewsRouter);
 //app.use('/', loginsRouter);
