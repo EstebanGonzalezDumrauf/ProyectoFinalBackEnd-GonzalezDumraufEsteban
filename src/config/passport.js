@@ -103,7 +103,7 @@ export const initializePassport = () => {
                 return done(null, user);
             }
             if (!user) {
-                console.log("No existe el usuario")
+                // console.log("No existe el usuario")
                 return done(null, false);
             }
             if (!isValidPassword(user, password)) {

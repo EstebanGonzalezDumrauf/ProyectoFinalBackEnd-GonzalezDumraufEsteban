@@ -1,4 +1,4 @@
-import { add_User, delete_User, getAllUser, get_User, get_User_By_Id, reset_Pass } from "../dao/mongo/sessions.js";
+import { add_User, delete_User, getAllUser, get_User, get_User_By_Id, reset_Pass, update_User, delete_Users } from "../dao/mongo/sessions.js";
 
 const sessions = [];
 
@@ -76,6 +76,19 @@ export const logout = async (req, res) => {
 
 export const deleteUser = async (_id, res) => {
     const result = await delete_User(_id);
+    if (!result) {
+        return false
+    }
+    return true;
+};
+
+export const deleteInactiveUsers = async () => {
+    const deletedCount = await delete_Users();
+    return deletedCount;
+};
+
+export const updateUser = async (user, res) => {
+    const result = await update_User(user);
     if (!result) {
         return false
     }

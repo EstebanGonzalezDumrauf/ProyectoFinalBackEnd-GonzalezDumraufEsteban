@@ -52,30 +52,6 @@ router.get('/loggerTest', (req, res) => {
     req.logger.error(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
     req.logger.fatal(`${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
 
-    // if (req.logger.warning('Log Warning')) {
-    //     testeandoLogs = testeandoLogs + 'Log Warning';
-    // }
-    
-    // if (req.logger.fatal('Log Fatal')) {
-    //     testeandoLogs = testeandoLogs + '-Log Fatal';
-    // }
-
-    // if (req.logger.error('Log Error')) {
-    //     testeandoLogs = testeandoLogs + '-Log Error';
-    // }
-
-    // if (req.logger.info('Log Info')) {
-    //     testeandoLogs = testeandoLogs + '-Log Info';
-    // }
-
-    // if (req.logger.http('Log Http')) {
-    //     testeandoLogs = testeandoLogs + '-Log Http';
-    // }
-
-    // if (req.logger.debug('Log Debug')) {
-    //     testeandoLogs = testeandoLogs + '-Log Debug';
-    // }
-
     res.send({status: 'sucess', payload: testeandoLogs});
 })
 
@@ -101,7 +77,7 @@ router.get('/users', checkAdmin, async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
     }
 });
 
@@ -137,9 +113,6 @@ router.get('/products', checkSession, async (req, res) => {
             username,
             isAdmin
         } = req.session.user;
-        //const { cart } = req.user.cart;
-        //console.log(cart);
-        //console.log(req.user);
     } else {
         // Si el usuario no está autenticado, redirige a la página de loggin
         return res.redirect('/');
@@ -194,9 +167,6 @@ router.get('/mockingproducts', checkSession, async (req, res) => {
             username,
             isAdmin
         } = req.session.user;
-        //const { cart } = req.user.cart;
-        //console.log(cart);
-        //console.log(req.user);
     } else {
         // Si el usuario no está autenticado, redirige a la página de loggin
         return res.redirect('/');
@@ -244,7 +214,7 @@ router.get('/api/products/:pid', checkSession, async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.status(500).json({
             result: 'error',
             message: 'Hubo un error en el servidor',
@@ -289,7 +259,7 @@ router.get('/carts/:cid', checkSession, async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
     }
 });
 

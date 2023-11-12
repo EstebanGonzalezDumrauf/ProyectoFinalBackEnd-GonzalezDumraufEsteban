@@ -31,6 +31,41 @@ export const delete_User = async (_id) => {
     return true;
 };
 
+export const delete_Users = async () => {
+    try {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const result = await userModel.deleteMany({
+            fecha_ultima_conexion: { $lt: sevenDaysAgo }
+        });
+
+        return result.deletedCount; // Devuelve la cantidad de documentos eliminados
+    } catch (error) {
+        console.error("Error al eliminar usuarios:", error);
+        return 0;
+    }
+};
+
+export const update_User = async (user) => {
+    try {
+        const result = await userModel.updateOne(
+            { _id: user._id }, 
+            { $set: { fecha_ultima_conexion: user.fecha_ultima_conexion } } 
+        );
+
+        if (result.nModified === 0) {
+            console.log("Usuario no encontrado o ningún cambio realizado.");
+            return false;
+        }
+    } catch (error) {
+        console.error("Error al actualizar el usuario:", error);
+        return false;
+    }
+
+    return true;
+};
+
 export const get_User = async (username) => {
     return await userModel.findOne({
         email: username

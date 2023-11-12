@@ -23,6 +23,7 @@ router.post('/chat', async (req, res) => {
             payload: result
         });
     } catch (error) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.send({
             status: "Error",
             error: 'Se produjo un error fatal'

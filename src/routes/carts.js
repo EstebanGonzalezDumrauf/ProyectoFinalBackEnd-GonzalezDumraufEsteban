@@ -23,16 +23,13 @@ router.get('/', async (req, res) => {
             payload: carrito
         });
     } catch (error) {
-        console.log(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
     }
 })
 
 router.post('/', async (req, res) => {
     try {
         const { arrayCart } = req.body;
-
-        // console.log('Datos recibidos:', req.body);
-        // console.log('arrayCart:', arrayCart);
 
         let result = await cartModel.create({arrayCart});
 
@@ -43,7 +40,7 @@ router.post('/', async (req, res) => {
             payload: result
         });
     } catch (error) {
-        console.error('Error:', error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.send({
             status: "Error",
             error: 'Se produjo un error fatal'
@@ -57,9 +54,6 @@ router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const { quantity } = 1; //req.body;
-        // console.log('Datos recibidos:', req.params);
-        // console.log('Datos transformados:', cid, pid);
-        console.log('Entro a la api');
         const productId = new mongoose.Types.ObjectId(pid);
 
         // Buscar el carrito por su ID
@@ -91,7 +85,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.status(500).json({
             result: 'error',
             message: 'Hubo un error en el servidor'
@@ -107,7 +101,7 @@ router.put('/:cid', checkSession, async (req, res) => {
             cid
         } = req.params;
 
-        console.log('Datos recibidos:', req.body);
+        req.logger.debug(`Datos recibidos en ${req.body} - ${new Date().toLocaleDateString()} `);
 
         let result = await cartModel.updateOne({ //RECORDAR QUE ESTE UPDATE NO AGREGA PRODUCTOS A LOS YA EXISTENTES
             _id: cid                               //PISA EL LISTADO DE PRODUCTOS CON UNO NUEVO
@@ -118,6 +112,7 @@ router.put('/:cid', checkSession, async (req, res) => {
             payload: result
         });
     } catch (error) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.send({
             status: "Error",
             error: 'Se produjo un error fatal'
@@ -172,7 +167,7 @@ router.delete('/:cid/products/:pid', checkSession, async (req, res) => {
             payload: result
         });
     } catch (error) {
-        console.error('Error:', error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.send({
             status: 'Error',
             error: 'Se produjo un error fatal'
@@ -241,7 +236,7 @@ router.post('/:cid/purchase', checkSession, async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
     }
 });
 

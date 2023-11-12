@@ -82,6 +82,7 @@ router.get('/', async (req, res) => {
             payload: productos,
         });
     } catch (error) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.status(500).json({
             result: 'error',
             message: 'Hubo un error en el servidor',
@@ -110,7 +111,7 @@ router.get('/:pid', async (req, res) => {
             payload: producto
         });
     } catch (error) {
-        console.error(error);
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.status(500).json({
             result: 'error',
             message: 'Hubo un error en el servidor'
@@ -171,6 +172,7 @@ router.post('/', async (req, res) => {
             payload: result
         });
     } catch (error) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
         res.send({
             status: "Error",
             error: 'Se produjo un error fatal'
