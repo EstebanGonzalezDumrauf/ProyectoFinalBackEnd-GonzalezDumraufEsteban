@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
             return new mongoose.Types.ObjectId();
         }
     },
-    rol: { /////PROBAR CON UN REGISTER
+    rol: { /////PUEDE SER: usuario - premium - Administrador
         type: String,
         default: "usuario"
     },

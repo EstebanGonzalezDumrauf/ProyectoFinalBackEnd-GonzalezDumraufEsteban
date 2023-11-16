@@ -1,4 +1,6 @@
 import { add_User, delete_User, getAllUser, get_User, get_User_By_Id, reset_Pass, update_User, delete_Users } from "../dao/mongo/sessions.js";
+import config from '../config/config.js';
+import nodemailer from 'nodemailer';
 
 const sessions = [];
 
@@ -44,6 +46,7 @@ export const addUser = async (user, res) => {
 };
 
 export const resetPassword = async (email, password, res) => {
+
     if (!email || !password) {
         return res.status(400).send({ status: "error", error: "Datos incompletos" });
     }
@@ -82,8 +85,39 @@ export const deleteUser = async (_id, res) => {
     return true;
 };
 
+const transport = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    auth: {
+        user: 'gribsserversiag@gmail.com',
+        pass: config.passGmail
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
 export const deleteInactiveUsers = async () => {
-    const deletedCount = await delete_Users();
+    const { deletedCount, deletedUsers } = await delete_Users();
+
+    for (const user of deletedUsers) {
+        // Enviar correo electrónico a cada usuario eliminado
+        const mailOptions = {
+            from: 'gribsserversiag@gmail.com',
+            to: user.email,
+            subject: 'Cuenta eliminada por inactividad',
+            text: 'Tu cuenta ha sido eliminada debido a la falta de actividad en los últimos 7 días.'
+        };
+
+        try {
+            await transport.sendMail(mailOptions);
+            console.log(`Correo enviado a ${user.email}`);
+        } catch (error) {
+            // console.error(`Error al enviar correo a ${user.email}:`, error);
+            // req.logger.error(`${error} - ${new Date().toLocaleDateString()} `);
+        }
+    }
+
     return deletedCount;
 };
 

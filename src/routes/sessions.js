@@ -11,7 +11,7 @@ import {
     getUserById,
     updateUser,
     deleteInactiveUsers
-} from "../controllers/sessions.js"
+} from "../controllers/sessions.js";
 import {
     createHash,
     generateToken,
@@ -19,12 +19,19 @@ import {
 } from "../utils.js";
 import passport from "passport";
 import { now } from "mongoose";
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+import config from '../config/config.js';
+import {
+    checkSession,
+    checkAdmin
+} from "../config/passport.js";
 
 const router = Router();
 
 router.get('/github', passport.authenticate('github', {
     scope: ['email']
-}), async (req, res) => {});
+}), async (req, res) => { });
 
 router.get('/githubCallback', passport.authenticate('github', {
     failureRedirect: '/failLoginGit'
@@ -65,7 +72,7 @@ router.post('/login', passport.authenticate('login', {
     delete req.user.password;
     req.session.user = req.user;
 
-    
+
     req.user.fecha_ultima_conexion = Date.now();
 
     console.log('datos del usuario', req.user);
@@ -100,16 +107,89 @@ router.get('/failRegister', async (req, res) => {
     });
 })
 
-router.post('/resetPassword', async (req, res) => {
+
+router.post('/resetPassword/:token', async (req, res) => {
+    const { email, password } = req.body;
+    const token = req.params.token;
+
+    console.log(token);
+    if (!token) {
+        return res.status(401).send('Token no proporcionado.');
+    }
+
+    jwt.verify(token, 'secreto', async (err, decoded) => {
+        if (err) {
+            return res.status(401).send('Enlace no válido o ha expirado.');
+        }
+
+        try {
+            const result = await resetPassword(email, password);
+
+            if (result.status === 'errorIgual') {
+                return res.status(402).send({
+                    status: "error",
+                    error: "El password debe ser distinto al existente."
+                });
+            }
+
+            if (result.status === 'errorUser') {
+                return res.status(400).send({
+                    status: "error",
+                    error: "El usuario no existe o el email no es correcto."
+                });
+            }
+
+            return res.status(200).send({
+                status: "success",
+                message: "Contraseña reseteada exitosamente"
+            });
+        } catch (error) {
+            console.error('Error al resetear la contraseña:', error);
+            res.status(500).send({
+                status: "error",
+                error: "Error al resetear la contraseña"
+            });
+        }
+    });
+});
+
+
+
+router.post('/mailPassword', async (req, res) => {
     const {
-        email,
-        password
+        email
     } = req.body;
-    resetPassword(email, password);
-    res.send({
-        status: "success",
-        message: "password reseteado"
-    })
+
+    if (email) {
+        try {
+            const token = jwt.sign({ email }, 'secreto', { expiresIn: '1h' });
+            const resetLink = `http://localhost:8080/resetPassword?token=${token}`;
+
+            let result = await transport.sendMail({
+                from: 'Administrador Coder <esteban.a.gonzalez.d@gmail.com>',
+                to: `${email}`,
+                subject: 'Solicitud de restauracion de contraseña',
+                html: `<div>
+                <h1> Para ello debe hacer click en el siguiente <a href="${resetLink}">link</a>. </h1>
+             </div>`,
+                attachments: []
+            })
+
+            // Si el envío de correo fue exitoso
+            res.status(200).json({
+                message: 'Correo enviado con éxito'
+            });
+        } catch (error) {
+            console.error('Error al enviar el correo:', error);
+            res.status(500).json({
+                error: 'Error al enviar el correo'
+            });
+        }
+    } else {
+        res.status(400).json({
+            error: 'Correo electrónico no proporcionado'
+        });
+    }
 })
 
 router.post('/logout', async (req, res) => {
@@ -117,29 +197,47 @@ router.post('/logout', async (req, res) => {
     return result;
 });
 
+const transport = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    auth: {
+        user: 'gribsserversiag@gmail.com',
+        pass: config.passGmail
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
 router.delete('/:uid', async (req, res) => {
     const {
         uid
     } = req.params;
     const user = await getUserById(uid);
     console.log(user, uid);
+    const email = user.email;
     const IsBorrado = await deleteUser(user);
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////// ver mail al usuario ///////////////////////////////////////////////////////////
     if (IsBorrado) {
+        if (email) {
+            let result = await transport.sendMail({
+                from: 'Administrador Coder <esteban.a.gonzalez.d@gmail.com>',
+                to: `${email}`,
+                subject: 'Su Usuario fue Eliminado por el Administrador',
+                html: `<div> <h1> Su Usuario fue eliminado por el Administrador de Coder. </h1></div>`,
+                attachments: []
+            })
+        }
         res.status(200).json({
             message: 'Usuario eliminado'
         });
     }
 });
 
-router.delete('/inactivos', async (req, res) => {
+router.post('/inactivos', checkAdmin, async (req, res) => {
     const deletedCount = await deleteInactiveUsers();
-    
-    if (deletedCount > 0) {
+
+    if (deletedCount) {
         res.status(200).json({
             message: `${deletedCount} usuarios eliminados`
         });

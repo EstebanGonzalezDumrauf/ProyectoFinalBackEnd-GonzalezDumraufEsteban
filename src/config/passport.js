@@ -41,13 +41,32 @@ export function checkAdmin(req, res, next) {
         } else {
             // Si no hay sesión o el usuario no está autenticado, redirige o responde con un error
             return res.status(401).json({
-                message: 'No autorizado'
+                message: 'No autorizado for ADMIN'
             });
         }
     } catch (error) {
         // Si no hay sesión o el usuario no está autenticado, redirige o responde con un error
         return res.status(401).json({
-            message: 'No autorizado'
+            message: 'No autorizado for ADMIN'
+        });
+    }
+}
+
+export function checkPremium(req, res, next) {
+    try {
+        if (req.session && req.session.user.rol === 'premium') {
+            // Si existe una sesión y el usuario está autenticado
+            return next();
+        } else {
+            // Si no hay sesión o el usuario no está autenticado, redirige o responde con un error
+            return res.status(401).json({
+                message: 'No autorizado for Premium'
+            });
+        }
+    } catch (error) {
+        // Si no hay sesión o el usuario no está autenticado, redirige o responde con un error
+        return res.status(401).json({
+            message: 'No autorizado for Premium'
         });
     }
 }

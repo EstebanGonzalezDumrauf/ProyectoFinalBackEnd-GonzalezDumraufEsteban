@@ -23,38 +23,47 @@
 </div>
 <div>
     {{#if cartProducts.length}}
-        {{#each cartProducts}}
-        <div class="product-container">
-            <div class="product-images">
-                {{#each thumbnail}}
-                <img src="{{this}}" alt="Imagen del producto" class="product-thumbnail">
-                {{/each}}
-            </div>
-            <div class="product-details">
-                <p class="cart-product-title">{{title}}</p>
-            </div>
-            <div class="product-details">
-                <p class="product-price"><strong>Por Unidad:</strong> $ {{price}}</p>
-            </div>
-            <div class="product-details">
-                <p class="product-quantity"><strong>Cantidad:</strong> {{quantity}}</p>
-            </div>
-            <div class="product-details">
-                <p class="product-subtotal"><strong>Subtotal:</strong> $ {{subtotal}}</p>
-            </div>
-            <form action="/api/cart/remove/{{id}}" method="delete">
-                <button class="remove-from-cart-button" type="submit">Quitar</button>
-            </form>
+    {{#each cartProducts}}
+    <div class="product-container">
+        <div class="product-images">
+            {{#each thumbnail}}
+            <img src="{{this}}" alt="Imagen del producto" class="product-thumbnail">
+            {{/each}}
         </div>
-        {{/each}}
-        <div class="total-container">
+        <div class="product-details">
+            <p class="cart-product-title">{{title}}</p>
+        </div>
+        <div class="product-details">
+            <p class="product-price"><strong>Por Unidad:</strong> $ {{price}}</p>
+        </div>
+        <div class="product-details">
+            <p class="product-quantity"><strong>Cantidad:</strong> {{quantity}}</p>
+        </div>
+        <div class="product-details">
+            <p class="product-subtotal"><strong>Subtotal:</strong> $ {{subtotal}}</p>
+        </div>
+        <form id="delete-from-carrito" method="delete" data-cid="{{cart}}" data-pid="{{id}}">
+            <button id="delete-from-carrito" class="remove-from-cart-button" type="button">Quitar</button>
+        </form>
+        </form>
+    </div>
+    {{/each}}
+    <div class="compra-container">
+        <div class="total-cart">
             <p class="product-subtotal"><strong>Monto Total:</strong> $ {{totalCarrito}}</p>
         </div>
+        <div class="comprar-ya-button">
+            <form id="comprar-carrito" method="post" data-cid="{{cart}}">
+            <button id="comprar-ahora" class="comprar-carrito-button" type="button">Comprar YA</button>
+        </form>
+        </div>       
+    </div>
     {{else}}
-        <div class="empty-cart-message">
-            Tu carrito está vacío. Agrega todos los productos que quieras.
-        </div>
+    <div class="empty-cart-message">
+        Tu carrito está vacío. Agrega todos los productos que quieras.
+    </div>
     {{/if}}
 </div>
 
 <script src="/js/logOutManager.js"></script>
+<script src="/js/deleteProductFromCart.js"></script>

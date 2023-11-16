@@ -10,6 +10,10 @@ const productSchema = new mongoose.Schema({
     price: Number,
     category: String,
     status: Boolean,
+    owner: { 
+        type: String, 
+        default: "Administrador"
+    },
     thumbnail: [String],
     code: {
         type: String,

@@ -159,6 +159,10 @@
     text-align: center;
 }
 
+.delete-users-form {
+    text-align: center;
+}
+
 /* Estilo para el botón "Agregar al Carrito" */
 .remove-from-cart-button {
     background-color: #f70727; /* Color de fondo personalizable */
@@ -389,4 +393,42 @@ table th, table td {
 table th {
     background-color: #007BFF;
     color: #fff;
+}
+
+.comprar-carrito-button {
+    background-color: #69e91e; /* Color de fondo personalizable */
+    color: black;/* Color del texto */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 18px; /* Tamaño de fuente */
+    border: none; /* Elimina el borde */
+    border-radius: 5px; /* Borde redondeado */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+}
+
+/* Estilo para el botón al pasar el mouse por encima */
+.comprar-carrito-button:hover {
+    background-color: #bdeca7; /* Color de fondo al pasar el mouse por encima */
+}
+
+.total-cart {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.comprar-ya-button {
+    text-align: right;
+    padding: 10px;
+}
+
+.compra-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0px;
+    background-color: #fff;
 }

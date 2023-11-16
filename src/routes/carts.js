@@ -53,8 +53,17 @@ router.post('/', async (req, res) => {
 router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
-        const { quantity } = 1; //req.body;
+        const cantidad = 1; //req.body;
         const productId = new mongoose.Types.ObjectId(pid);
+
+        // quantity = parseInt(quantity); 
+
+        // if (isNaN(quantity) || quantity <= 0) {
+        //     return res.status(400).json({
+        //         result: 'error',
+        //         message: 'La cantidad proporcionada no es válida'
+        //     });
+        // }
 
         // Buscar el carrito por su ID
         const cartExistente = await cartModel.findById(cid);
@@ -64,11 +73,12 @@ router.put('/:cid/products/:pid', async (req, res) => {
             const productoEnCarrito = cartExistente.arrayCart.find(elto => elto.product.equals(productId)); // Comparar utilizando .equals()
 
             if (productoEnCarrito) {
+                const quantitySumada = productoEnCarrito.quantity + cantidad;
                 // Si ya existe, agregar la cantidad proporcionada en el cuerpo
-                productoEnCarrito.quantity = quantity;
+                productoEnCarrito.quantity = quantitySumada;
             } else {
                 // Si el producto no está en el carrito, agregarlo con la cantidad proporcionada en el cuerpo
-                cartExistente.arrayCart.push({ product: productId, quantity: quantity });
+                cartExistente.arrayCart.push({ product: productId, quantity: cantidad });
             }
 
             // Guardar el carrito actualizado
@@ -156,6 +166,7 @@ router.delete('/:cid', async (req, res) => {
 router.delete('/:cid/products/:pid', checkSession, async (req, res) => {
     try {
         const { pid, cid } = req.params;
+        console.log( pid, cid );
 
         const result = await cartModel.updateOne(
             { _id: cid },

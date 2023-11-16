@@ -1,7 +1,7 @@
 import {
     userModel
 } from '../../models/user.js';
-import { createHash } from "../../utils.js";
+import { createHash, isValidPassword } from "../../utils.js";
 import { cartModel } from '../../models/cart.js';
 
 export const getAllUser = async () => {
@@ -36,16 +36,20 @@ export const delete_Users = async () => {
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
+        const deletedUsers = await userModel.find({
+            fecha_ultima_conexion: { $lt: sevenDaysAgo }
+        });
+
         const result = await userModel.deleteMany({
             fecha_ultima_conexion: { $lt: sevenDaysAgo }
         });
 
-        return result.deletedCount; // Devuelve la cantidad de documentos eliminados
+        return { deletedCount: result.deletedCount, deletedUsers };
     } catch (error) {
-        console.error("Error al eliminar usuarios:", error);
-        return 0;
+        return { deletedCount: 0, deletedUsers: [] };
     }
 };
+
 
 export const update_User = async (user) => {
     try {
@@ -78,19 +82,41 @@ export const get_User_By_Id = async (_id) => {
 };
 
 export const reset_Pass = async (email, password) => {
+
     const user = await userModel.findOne({ email });
+
     if (!user) {
-        return res.status(404).send({
-            status: "error",
-            error: "No existe el usuario"
-        });
+        const result = {
+            status: "errorUser",
+            message: "No existe el usuario o E-mail."
+        };
+        return result;
     }
     const passwordHash = createHash(password);
-    await userModel.updateOne({
-        email
-    }, {
-        $set: {
-            password: passwordHash
-        }
-    })
+
+    if (isValidPassword(user, password)) {
+
+        const result = {
+            status: "errorIgual",
+            message: "El password debe ser distinto al existente."
+        };
+        return result;
+
+    } else {
+
+        await userModel.updateOne({
+            email
+        }, {
+            $set: {
+                password: passwordHash
+            }
+        })
+
+        const result = {
+            status: "success",
+            message: "El password se actualizó correctamente."
+        };
+        return result;
+    }
+
 };

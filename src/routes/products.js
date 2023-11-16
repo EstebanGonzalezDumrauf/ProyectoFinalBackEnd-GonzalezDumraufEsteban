@@ -130,6 +130,7 @@ router.post('/', async (req, res) => {
             status,
             thumbnail,
             code,
+            owner,
             stock
         } = req.body;
 
@@ -144,6 +145,7 @@ router.post('/', async (req, res) => {
                     status,
                     thumbnail,
                     code,
+                    owner,
                     stock
                 }),
                 message: 'Falta ingresar el title o el code del producto ', 
@@ -156,6 +158,17 @@ router.post('/', async (req, res) => {
             });
         }
 
+        console.log({
+            title,
+            description,
+            price,
+            category,
+            status,
+            thumbnail,
+            code,
+            owner,
+            stock
+        });
         let result = await productModel.create({
             title,
             description,
@@ -164,6 +177,7 @@ router.post('/', async (req, res) => {
             status,
             thumbnail,
             code,
+            owner,
             stock
         });
 

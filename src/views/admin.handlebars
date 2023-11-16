@@ -31,10 +31,12 @@
             {{/each}}
         </tbody>
     </table>
-    <form action="/accion" method="post" class="add-to-cart-form">
-        <input type="hidden" name="user_id" value="{{this._doc._id}}">
-        <button type="submit" class="add-to-cart-button">Borrar Usuarios sin Actividad</button>
+    <form id="delete-users" method="delete" class="delete-users-form">
+        <button id="eliminar-usuarios" type="button" class="add-to-cart-button">Borrar Usuarios sin Actividad</button>
+
     </form>
+
 
     <script src="/js/logOutManager.js"></script>
     <script src="/js/deleteUser.js"></script>
+    <script src="/js/deleteInactiveUsers.js"></script>

@@ -63,6 +63,10 @@ router.get('/resetPassword', publicAccess, (req, res) => {
     res.render('reset')
 })
 
+router.get('/mailPassword', publicAccess, (req, res) => {
+    res.render('mail')
+})
+
 //router.get('/users', checkAdmin, async (req, res) => {
 router.get('/users', checkAdmin, async (req, res) => {
     try {
@@ -240,10 +244,11 @@ router.get('/carts/:cid', checkSession, async (req, res) => {
                 totalCarrito += subtotal;
                 cantidadItems += item.quantity;
                 return {
+                    cart: cid,
                     title: item.product.title,
                     price: item.product.price,
                     quantity: item.quantity,
-                    id: item._id,
+                    id: item.product._id,
                     thumbnail: item.product.thumbnail,
                     subtotal: subtotal,
                 };
@@ -255,6 +260,7 @@ router.get('/carts/:cid', checkSession, async (req, res) => {
             cartProducts: cartItems,
             totalCarrito,
             cantidadItems,
+            cart: cid,
             user: req.session.user
         });
 

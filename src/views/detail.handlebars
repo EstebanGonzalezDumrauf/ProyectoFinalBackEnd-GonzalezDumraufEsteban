@@ -29,10 +29,6 @@
         <form id="add-to-carrito" method="put" data-cid="{{cart}}" data-pid="{{product._id}}">
             <button id="add-to-cart" class="add-to-cart-button" type="button">Agregar al Carrito</button>
         </form>
-        {{!-- <form class="add-to-cart-form" action="{{cart}}" method="post">
-            <input type="hidden" name="productId" value="{{product._id}}">
-            <button class="add-to-cart-button" type="submit">Agregar al Carrito</button>
-        </form> --}}
     </div>
     <div class="product-images">
         {{#each product.thumbnail}}

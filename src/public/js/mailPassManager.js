@@ -1,7 +1,7 @@
-const form = document.getElementById('resetPassForm');
+const form = document.getElementById('mailPassForm');
 
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('resetPassForm');
+    const form = document.getElementById('mailPassForm');
     const userField = document.getElementById('email');
 
     form.addEventListener('submit', function (event) {
@@ -24,32 +24,24 @@ form.addEventListener('submit', (evt) => {
     const obj = {};
 
     data.forEach((value, key) => obj[key] = value);
-
-    // Obtener el token de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    fetch(`/api/sessions/resetPassword/${token}`, {
+    fetch('/api/sessions/mailPassword', {
         method: 'POST', 
         body: JSON.stringify(obj),
         headers: {
-            'Content-type': 'application/json'
+            'Content-type':'application/json'
         }
     }).then(result => {
         if (result.status === 200) {
             window.location.href = '/';
         } else if (result.status === 400) {
+            // Usuario ya registrado
             const msjErrorLabel = document.getElementById('msjErrorReset');
-            msjErrorLabel.textContent = "El usuario no existe o el email no es correcto.";
+            msjErrorLabel.textContent = "Error al intentar enviar el correo.";
         } else if (result.status === 401) {
-            const msjErrorLabel = document.getElementById('msjErrorReset');
-            msjErrorLabel.textContent = "El enlace no es válido o ha expirado.";
-        } else if (result.status === 402) {
-            const msjErrorLabel = document.getElementById('msjErrorReset');
-            msjErrorLabel.textContent = "La nueva contraseña debe ser diferente a la actual.";
+            // Expiró el timer
+            window.location.href = '/mailPassword';
         }
     }).catch(error => {
         console.error('Error al realizar la solicitud:', error);
     });
 });
-
