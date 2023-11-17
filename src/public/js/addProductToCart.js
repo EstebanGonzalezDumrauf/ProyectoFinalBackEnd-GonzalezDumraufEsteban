@@ -14,11 +14,24 @@ addToCartButtons.forEach(button => {
         const cid = form.getAttribute('data-cid');
         const pid = form.getAttribute('data-pid');
 
-        console.log('Entro al addptoduct.js');
-        const data = new FormData(form);
-        const obj = {};
+        // Busca el campo de cantidad usando el ID del producto
+        let quantityInput = document.getElementById(`${pid}`).value;
 
+        if (!quantityInput) {
+            console.error('No se encontró el campo de cantidad asociado al producto.');
+            return;
+        }
+
+        // Crea un objeto FormData y agrega el campo quantity
+        let data = new FormData(form);
+        data.append('quantity', quantityInput);
+
+        let obj = {};
+
+        // Itera sobre los pares clave/valor de FormData y agrega al objeto
         data.forEach((value, key) => obj[key] = value);
+
+        console.log(obj);
 
         fetch(`/api/carts/${cid}/products/${pid}`, {
             method: 'PUT',
@@ -36,4 +49,5 @@ addToCartButtons.forEach(button => {
         });
     });
 });
+
 

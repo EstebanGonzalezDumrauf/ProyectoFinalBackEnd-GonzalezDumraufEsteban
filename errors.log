@@ -2,3 +2,10 @@
 {"level":"error","message":"ReferenceError: quantity is not defined - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 15/11/2023 "}
 {"level":"error","message":"MongoServerError: E11000 duplicate key error collection: Ecommerce.products index: code_1 dup key: { code: \"CUI-996\" } - POST en / - 16/11/2023 "}
 {"level":"error","message":"ReferenceError: valor is not defined - POST en / - 16/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"undefined\" (type string) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"undefined\" (type string) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"undefined\" (type string) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"undefined\" (type string) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"NaN\" (type number) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"NaN\" (type number) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}
+{"level":"error","message":"ValidationError: arrayCart.3.quantity: Cast to Number failed for value \"NaN\" (type number) at path \"quantity\" - PUT en /64fcae446abbc5ebaf62c79a/products/64f64df102c0446eb31d7baf - 17/11/2023 "}

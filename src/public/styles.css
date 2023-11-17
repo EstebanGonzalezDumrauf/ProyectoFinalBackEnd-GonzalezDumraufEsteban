@@ -55,6 +55,12 @@
     text-align: center;
 }
 
+.input-container {
+    display: flex;
+    margin: 10px; /* Ajusta el espacio entre el input y el botón según tu preferencia */
+    align-items: center;
+}
+
 .product-button {
     /*background-color: #ff6600;
     color: #fff;*/
@@ -159,6 +165,20 @@
     text-align: center;
 }
 
+#add-to-cart {
+    display: flex;
+    align-items: center;
+}
+
+.add-to-cart-value {
+    color: black;/* Color del texto */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border-radius: 5px; /* Borde redondeado */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+    margin-right: 10px;
+}
+
 .delete-users-form {
     text-align: center;
 }
@@ -207,7 +227,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+d-to
 h1 {
     text-align: center;
 }

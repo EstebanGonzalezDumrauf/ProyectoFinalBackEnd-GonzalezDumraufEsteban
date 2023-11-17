@@ -72,10 +72,9 @@ router.post('/login', passport.authenticate('login', {
     delete req.user.password;
     req.session.user = req.user;
 
-
     req.user.fecha_ultima_conexion = Date.now();
 
-    console.log('datos del usuario', req.user);
+    //console.log('datos del usuario', req.user);
     const result = await updateUser(req.user);
     res.send({
         status: "success",

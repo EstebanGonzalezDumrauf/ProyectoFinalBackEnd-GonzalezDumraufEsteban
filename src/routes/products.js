@@ -195,12 +195,27 @@ router.post('/', async (req, res) => {
 
 })
 
-router.put('/:pid', checkAdmin, async (req, res) => {
+router.put('/:pid', async (req, res) => {
 
     let datosAUpdate = req.body;
     let {
         pid
     } = req.params;
+
+    
+    // console.log(req.session.user);
+    // {
+    //     _id: '655377cde55773f7b67f82d8',
+    //     first_name: 'Esteban',
+    //     last_name: 'Gonzalito',
+    //     email: 'esteban_a_gd@hotmail.com',
+    //     age: 44,
+    //     password: '$2b$10$iMFRdQh0Ueywy0BUemcEru26ucmBhPzlr1E.VcKLrMmBdDBhj66.6',
+    //     cart: '64fcae446abbc5ebaf62c79a',
+    //     rol: 'usuario',
+    //     fecha_ultima_conexion: '2023-11-17T14:37:42.270Z',
+    //     __v: 0
+    //   }
 
     let result = await productModel.updateOne({
         _id: pid

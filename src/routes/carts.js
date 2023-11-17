@@ -53,7 +53,9 @@ router.post('/', async (req, res) => {
 router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
-        const cantidad = 1; //req.body;
+        //const cantidad = 1; //req.body;
+        const cantidad = req.body.quantity;
+        console.log(cantidad);
         const productId = new mongoose.Types.ObjectId(pid);
 
         // quantity = parseInt(quantity); 
