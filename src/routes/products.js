@@ -202,7 +202,24 @@ router.put('/:pid', async (req, res) => {
         pid
     } = req.params;
 
-    
+    const producto = await getProductsByID(pid)
+
+    if (!producto) {
+        return res.status(404).json({
+            result: 'error',
+            message: 'Producto no encontrado'
+        });
+    }
+
+    if ((!req.session.user && req.session.user.rol !== 'Administrador') || 
+    (!req.session.user && req.session.user.email !== producto.owner)) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+        return res.send({
+            status: "Error",
+            error: 'No autorizado'
+        });
+    }
+
     // console.log(req.session.user);
     // {
     //     _id: '655377cde55773f7b67f82d8',
@@ -227,11 +244,29 @@ router.put('/:pid', async (req, res) => {
     });
 })
 
-router.delete('/:pid', checkAdmin, async (req, res) => {
+router.delete('/:pid', async (req, res) => {
 
     let {
         pid
     } = req.params;
+
+    const producto = await getProductsByID(pid)
+
+    if (!producto) {
+        return res.status(404).json({
+            result: 'error',
+            message: 'Producto no encontrado'
+        });
+    }
+
+    if ((!req.session.user && req.session.user.rol !== 'Administrador') || 
+    (!req.session.user && req.session.user.email !== producto.owner)) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+        return res.send({
+            status: "Error",
+            error: 'No autorizado'
+        });
+    }
 
     let result = await productModel.deleteOne({
         _id: pid

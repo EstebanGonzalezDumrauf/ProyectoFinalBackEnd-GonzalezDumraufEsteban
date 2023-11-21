@@ -53,10 +53,17 @@ export const delete_Users = async () => {
 
 export const update_User = async (user) => {
     try {
+        console.log('dentro update', user);
         const result = await userModel.updateOne(
             { _id: user._id }, 
-            { $set: { fecha_ultima_conexion: user.fecha_ultima_conexion } } 
+            { 
+                $set: { 
+                    rol: user.rol,
+                    fecha_ultima_conexion: user.fecha_ultima_conexion 
+                }
+            }
         );
+        
 
         if (result.nModified === 0) {
             console.log("Usuario no encontrado o ningún cambio realizado.");

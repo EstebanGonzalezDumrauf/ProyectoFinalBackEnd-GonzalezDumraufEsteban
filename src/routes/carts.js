@@ -58,12 +58,30 @@ router.put('/:cid/products/:pid', async (req, res) => {
         console.log(cantidad);
         const productId = new mongoose.Types.ObjectId(pid);
 
-        // quantity = parseInt(quantity); 
+        const cantidadvALOR = parseInt(cantidad); 
 
-        // if (isNaN(quantity) || quantity <= 0) {
-        //     return res.status(400).json({
+        if (isNaN(cantidadvALOR) || cantidadvALOR <= 0) {
+            return res.status(400).json({
+                result: 'error',
+                message: 'La cantidad proporcionada no es válida'
+            });
+        }
+
+        // REVISARRRRRRRRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //const producto = await getProductsByID(pid)
+
+        // if (!producto) {
+        //     return res.status(404).json({
         //         result: 'error',
-        //         message: 'La cantidad proporcionada no es válida'
+        //         message: 'Producto no encontrado'
+        //     });
+        // }
+    
+        // if (!req.session.user && (req.session.user.rol === 'premium' && req.session.user.email !== producto.owner)) {
+        //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+        //     return res.send({
+        //         status: "Error",
+        //         error: 'No autorizado'
         //     });
         // }
 

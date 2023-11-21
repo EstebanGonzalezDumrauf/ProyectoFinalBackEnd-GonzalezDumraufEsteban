@@ -121,8 +121,8 @@ export const deleteInactiveUsers = async () => {
     return deletedCount;
 };
 
-export const updateUser = async (user, res) => {
-    const result = await update_User(user);
+export const updateUser = async (req, res) => {
+    const result = await update_User(req);
     if (!result) {
         return false
     }

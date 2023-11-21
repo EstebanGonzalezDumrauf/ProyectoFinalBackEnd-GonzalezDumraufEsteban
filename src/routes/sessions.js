@@ -170,7 +170,7 @@ router.post('/mailPassword', async (req, res) => {
                 subject: 'Solicitud de restauracion de contraseña',
                 html: `<div>
                 <h1> Para ello debe hacer click en el siguiente <a href="${resetLink}">link</a>. </h1>
-             </div>`,
+            </div>`,
                 attachments: []
             })
 
@@ -232,6 +232,37 @@ router.delete('/:uid', async (req, res) => {
         });
     }
 });
+
+
+router.post('/premium/:uid', async (req, res) => {
+    const {
+        uid
+    } = req.params;
+    const user = await getUserById(uid);
+    console.log('de la BD', user, uid);
+    const email = user.email;
+
+    if (user.rol === 'usuario') {
+        user.rol = 'premium'
+        //console.log('actualizada', user, uid);
+    } else if (user.rol === 'premium') {
+        user.rol = 'usuario'
+        //console.log('actualizada', user, uid);
+    }
+
+    const result = await updateUser(user);
+
+    if (result) {
+        res.status(200).json({
+            message: `${user} actualizado`
+        });
+    } else {
+        res.status(400).json({
+            error: 'Correo electrónico no proporcionado'
+        });
+    }
+});
+
 
 router.post('/inactivos', checkAdmin, async (req, res) => {
     const deletedCount = await deleteInactiveUsers();
