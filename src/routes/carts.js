@@ -67,23 +67,23 @@ router.put('/:cid/products/:pid', async (req, res) => {
             });
         }
 
-        // REVISARRRRRRRRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //const producto = await getProductsByID(pid)
+        const producto = await getProductsByID(pid)
+        if (!producto) {
+            return res.status(404).json({
+                result: 'error',
+                message: 'Producto no encontrado'
+            });
+        }
 
-        // if (!producto) {
-        //     return res.status(404).json({
-        //         result: 'error',
-        //         message: 'Producto no encontrado'
-        //     });
-        // }
+        console.log('producto:', producto, 'req.session.user:', req.session.user, 'req.session.user.rol: ', req.session.user.rol, 'req.session.user.email: ', req.session.user.email, 'producto.owner; ', producto.owner);
     
-        // if (!req.session.user && (req.session.user.rol === 'premium' && req.session.user.email !== producto.owner)) {
-        //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
-        //     return res.send({
-        //         status: "Error",
-        //         error: 'No autorizado'
-        //     });
-        // }
+        if (!req.session.user || (req.session.user.rol === 'premium' && req.session.user.email === producto.owner)) {
+            req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+            return res.send({
+                status: "Error",
+                error: 'No autorizado'
+            });
+        }
 
         // Buscar el carrito por su ID
         const cartExistente = await cartModel.findById(cid);

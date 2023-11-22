@@ -200,6 +200,22 @@
     background-color: #ee9a9a; /* Color de fondo al pasar el mouse por encima */
 }
 
+.modify-rol-button {
+    background-color:#0056b3; /* Color de fondo personalizable */
+    color: #fff; /* Color del texto */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 18px; /* Tamaño de fuente */
+    border: none; /* Elimina el borde */
+    border-radius: 5px; /* Borde redondeado */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+}
+
+/* Estilo para el botón al pasar el mouse por encima */
+.modify-rol-button:hover {
+    background-color:lightblue; /* Color de fondo al pasar el mouse por encima */
+}
+
 .total-container {
     display: flex;
     justify-content:center;

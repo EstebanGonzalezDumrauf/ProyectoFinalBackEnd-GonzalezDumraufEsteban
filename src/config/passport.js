@@ -19,7 +19,7 @@ const GitHubStrategy = gitHubStrategy.Strategy;
 export function checkSession(req, res, next) {
     try {
         //console.log(req.session);
-        if (req.session && req.session.user.rol === 'usuario') {
+        if (req.session && (req.session.user.rol === 'usuario' || req.session.user.rol === 'premium')) {
             return next();
         } else {
             return res.status(401).json({

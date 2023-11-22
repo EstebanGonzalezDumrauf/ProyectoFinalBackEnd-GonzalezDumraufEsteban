@@ -53,7 +53,6 @@ export const delete_Users = async () => {
 
 export const update_User = async (user) => {
     try {
-        console.log('dentro update', user);
         const result = await userModel.updateOne(
             { _id: user._id }, 
             { 

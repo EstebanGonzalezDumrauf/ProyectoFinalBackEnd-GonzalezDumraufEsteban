@@ -1,24 +1,32 @@
 <div class="divLoggin">
-    <div class="container">
-        <div class="cart-container">
-            <div class="cart-icon">
-                <a href="/carts/{{user.cart}}">
-                    <img src="/img/cart.png" alt="carrito de compras" style="width: 30px;">
-                </a>
-                <span class="cart-item-count">{{cantidadItems}}</span>
+    <div class="container" style="display: flex; justify-content: space-between;">
+        <div>
+            <a href="/products" class="product-button">Ir a Productos</a>
+        </div>
+
+        <div class="container">
+            <div class="cart-container">
+                <div class="cart-icon">
+                    <a href="/carts/{{user.cart}}">
+                        <img src="/img/cart.png" alt="carrito de compras" style="width: 30px;">
+                    </a>
+                    <span class="cart-item-count">{{cantidadItems}}</span>
+                </div>
+                {{!-- <span class="cart-item-count">{{cartItemCount}}</span> --}}
             </div>
-            {{!-- <span class="cart-item-count">{{cartItemCount}}</span> --}}
+            <div class="user-session">
+                <p class="msj-session">Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong>!!!</p>
+                <p class="msj-session">{{user.rol}}</p>
+            </div>
+            <div class="logout">
+                <form id="log-out-session-Form" action="{{logout}}" method="post">
+                    <input type="hidden">
+                    <button class="Log-Out" type="submit">Salir</button>
+                </form>
+            </div>
         </div>
-        <div class="user-session">
-            <p class="msj-session">Bienvenido, <strong>{{user.first_name}} {{user.last_name}}</strong>!!!</p>
-            <p class="msj-session">{{user.rol}}</p>
-        </div>
-        <div class="logout">
-            <form id="log-out-session-Form" action="{{logout}}" method="post">
-                <input type="hidden">
-                <button class="Log-Out" type="submit">Salir</button>
-            </form>
-        </div>
+
+
     </div>
 </div>
 
@@ -30,8 +38,8 @@
             <p class="product-price"><strong>Precio:</strong> ${{this._doc.price}}</p>
         </div>
         <div class="input-container">
-            <input type="text" class="add-to-cart-value" id="{{this._doc._id}}" name="name"
-                required minlength="4" maxlength="4" size="10" style="max-width: 20px;" value="1" />
+            <input type="text" class="add-to-cart-value" id="{{this._doc._id}}" name="name" required minlength="4"
+                maxlength="4" size="10" style="max-width: 20px;" value="1" />
 
 
             <form id="add-to-carrito" method="put" data-cid="{{this.cart}}" data-pid="{{this._doc._id}}">

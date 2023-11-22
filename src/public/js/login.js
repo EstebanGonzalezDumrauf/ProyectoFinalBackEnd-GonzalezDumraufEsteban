@@ -33,7 +33,7 @@ form.addEventListener('submit', e => {
         console.log(data);
         if (response.status === 200) {
             response.json().then(data => {
-                if (data.payload.rol === 'usuario') {
+                if (data.payload.rol === 'usuario' || data.payload.rol === 'premium') {
                     window.location.href = '/products';
                 } else {
                     console.log(data);

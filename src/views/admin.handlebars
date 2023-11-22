@@ -23,6 +23,11 @@
                 <td>{{this._doc.email}}</td>
                 <td>{{this._doc.rol}}</td>
                 <td>
+                    <form id="modify-rol-user" method="put" user-id="{{this._doc._id}}">
+                        <button id="modificar-rol-usuario" type="button" class="modify-rol-button">Modificar Rol</button>
+                    </form>
+                </td>
+                <td>
                     <form id="delete-user" method="delete" user-id="{{this._doc._id}}">
                         <button id="eliminar-usuario" type="button" class="remove-from-cart-button">Eliminar</button>
                     </form>
