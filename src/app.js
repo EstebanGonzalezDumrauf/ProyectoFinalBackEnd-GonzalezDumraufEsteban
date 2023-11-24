@@ -25,8 +25,21 @@ import {
 import MongoSingleton from './class/MongoSingleton.js';
 
 import { addLogger } from './utils/logger.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 const app = express();
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentación de E-commerce Shining Life',
+            description: 'API backend E-commerce Shining Life'
+        }
+    },
+    apis: [`${__dirName}/docs/**/*.yaml`]
+}
 
 app.engine('handlebars', handlebars.engine());
 //app.set('views', __dirName, '/views');
@@ -51,11 +64,13 @@ app.use(session({
 }));
 
 initializePassport();
-app.use(passport.initialize());
+app.use(passport.initialize()); 
 app.use(passport.session());
 
 app.use(addLogger);
 
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 app.use('/', viewsRouter);
 //app.use('/', loginsRouter);
 app.use('/api/sessions', sessionsRouter);

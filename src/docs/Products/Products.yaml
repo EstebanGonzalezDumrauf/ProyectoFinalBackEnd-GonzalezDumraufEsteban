@@ -1,0 +1,66 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'
+        "500":
+          description: Hubo un error en el servidor, posible problema de conexion a la base de datos o query defectuosa
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID autogenerado de Mongo
+        title:
+          type: String
+          description: Titulo Abreviado del Producto
+        description:
+          type: String
+          description: Descripción detallada del Producto
+        price:
+          type: Number
+          description: Precio del Producto
+        category:
+          type: String
+          description: Categoría del Producto
+        status:
+          type: Boolean
+          description: Estado del Producto
+        owner:
+          type: String
+          description: Creador del Producto, por default es el Administrador
+        thumbnail:
+          type: Array
+          description: Listado de paths de las fotos del Producto
+        code:
+          type: String
+          description: Código Interno del Producto, este campo debe ser único
+        stock:
+          type: Number
+          description: Stock Actual del Producto
+      example:
+        _id: ObjectId("64f64f7002c0446eb31d7bb9")
+        title: Rutina Chronos
+        description: Para piel seca - Marca Chronos
+        price: 15822
+        category: belleza
+        status: true
+        owner: administrador
+        thumbnail: [
+          "https://shininglife.netlify.app/images/productos/belleza/Rutina_completa_piel_seca_Chronos.jpg"
+        ]
+        code: CUI-556
+        stock: 150
