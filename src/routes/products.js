@@ -202,23 +202,23 @@ router.put('/:pid', async (req, res) => {
         pid
     } = req.params;
 
-    const producto = await getProductsByID(pid)
+    // const producto = await getProductsByID(pid)
 
-    if (!producto) {
-        return res.status(404).json({
-            result: 'error',
-            message: 'Producto no encontrado'
-        });
-    }
+    // if (!producto) {
+    //     return res.status(404).json({
+    //         result: 'error',
+    //         message: 'Producto no encontrado'
+    //     });
+    // }
 
-    if ((!req.session.user && req.session.user.rol !== 'Administrador') || 
-    (!req.session.user && req.session.user.email !== producto.owner)) {
-        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
-        return res.send({
-            status: "Error",
-            error: 'No autorizado'
-        });
-    }
+    // if ((!req.session.user && req.session.user.rol !== 'admin') || 
+    // (!req.session.user && req.session.user.email !== producto.owner)) {
+    //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    //     return res.status(401).send({
+    //         status: "Error",
+    //         error: 'No autorizado'
+    //     });
+    // }
 
     // console.log(req.session.user);
     // {
@@ -238,7 +238,7 @@ router.put('/:pid', async (req, res) => {
         _id: pid
     }, datosAUpdate);
 
-    res.send({
+    res.status(200).send({
         result: 'sucess',
         payload: result
     });
@@ -250,23 +250,23 @@ router.delete('/:pid', async (req, res) => {
         pid
     } = req.params;
 
-    const producto = await getProductsByID(pid)
+    // const producto = await getProductsByID(pid)
 
-    if (!producto) {
-        return res.status(404).json({
-            result: 'error',
-            message: 'Producto no encontrado'
-        });
-    }
+    // if (!producto) {
+    //     return res.status(404).json({
+    //         result: 'error',
+    //         message: 'Producto no encontrado'
+    //     });
+    // }
 
-    if ((!req.session.user && req.session.user.rol !== 'Administrador') || 
-    (!req.session.user && req.session.user.email !== producto.owner)) {
-        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
-        return res.send({
-            status: "Error",
-            error: 'No autorizado'
-        });
-    }
+    // if ((!req.session.user && req.session.user.rol !== 'admin') || 
+    // (!req.session.user && req.session.user.email !== producto.owner)) {
+    //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    //     return res.send({
+    //         status: "Error",
+    //         error: 'No autorizado'
+    //     });
+    // }
 
     let result = await productModel.deleteOne({
         _id: pid
