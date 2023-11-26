@@ -19,3 +19,4 @@
 {"level":"error","message":"ObjectParameterError: Parameter \"filter\" to findOne() must be an object, got \"64f71fe6cd96b7c2689f6994\" (type string) - PUT en /64fcae446abbc5ebaf62c79a/products/64f71fe6cd96b7c2689f6994 - 21/11/2023 "}
 {"level":"error","message":"ObjectParameterError: Parameter \"filter\" to findOne() must be an object, got \"64f71fe6cd96b7c2689f6994\" (type string) - PUT en /64fcae446abbc5ebaf62c79a/products/64f71fe6cd96b7c2689f6994 - 21/11/2023 "}
 {"level":"error","message":"ReferenceError: error is not defined - PUT en /64fcae446abbc5ebaf62c79a/products/64f71fe6cd96b7c2689f6994 - 21/11/2023 "}
+{"level":"error","message":"TypeError: Cannot read properties of undefined (reading 'rol') - PUT en /655217dd478c7ea0b23a0689/products/64f64ffa02c0446eb31d7bbd - 26/11/2023 "}

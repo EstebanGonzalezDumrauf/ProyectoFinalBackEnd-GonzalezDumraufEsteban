@@ -1,0 +1,143 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carts
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Los carts fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un error en el servidor, posible problema de conexion a la base de datos o query defectuosa
+
+  /api/carts/{cid}/products/{pid}:
+    put:
+      summary: Carga un producto con su cantidad en el carrito identificado por su CID
+      tags:
+        - Carts
+      parameters:
+      - name: pid
+        in: path
+        requiered: true
+        description: ID del producto a colocar en el carrito
+        schema:
+          $type: String
+      - name: cid
+        in: path
+        requiered: true
+        description: ID del carrito al cual colocar el producto identificado por el CID
+        schema:
+          $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/insertProductInCart'
+      responses:
+        "200":
+          description: El producto fue cargado exitosamente en el carrito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un error en el servidor, posible problema de conexion a la base de datos o query defectuosa
+  /api/carts/{cid}:
+    delete:
+      summary: Limpia un carrito de un usuario
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        requiered: true
+        description: ID del carrito a vaciar
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: El carrito fue eliminado satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un error en el servidor, posible problema de conexion a la base de datos o query defectuosa
+
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID autogenerado de Mongo
+        arrayCart:
+          type: Array
+          description: Array de Objetos
+      example: [{
+        _id: 64fcae446abbc5ebaf62c79a,
+        arrayCart: [{
+          product: "64f64ffa02c0446eb31d7bbd",
+          quantity: 2,
+          _id: "64fccc52aa44c570230c3fbc"
+        },
+        {
+          product: "64f883ff8c5820c7d3aab6ca",
+          quantity: 1000,
+          _id: "64fccc52aa44c570230c3fbd"
+        },
+        {
+          product: "64f64df102c0446eb31d7baf",
+          quantity: 7,
+          _id: "655cc620dd875518f254ba03"
+        },
+        {
+          product: "64f71fe6cd96b7c2689f6994",
+          quantity: 4,
+          _id: "655e42c3b96f09a0335f8252"
+        }
+        ],
+        __v: 37
+        },
+        {
+        _id: "655217dd478c7ea0b23a0689",
+        arrayCart: [
+        {
+          product: "64f64e3802c0446eb31d7bb1",
+          _id: "65521836478c7ea0b23a06b1",
+          quantity: 2
+        },
+        {
+          product: "64f64e8502c0446eb31d7bb3",
+          quantity: 1,
+          _id: 65521aaa7c4ee9b189267611
+        }
+        ],
+        __v: 3
+        }
+      ]
+  requestBodies:
+    insertProductInCart:
+      type: ObjectId
+      properties: 
+        quantity::
+          type: Number
+          description: Cantidad del Producto a agregar al carrito
+      example:
+        {
+        "quantity": 18
+        }
