@@ -239,13 +239,11 @@ router.post('/:cid/purchase', checkSession, async (req, res) => {
                     const id = item.product;
                     const stockAReducir = item.quantity;
                 
-                    console.log(id._id, stockAReducir);
                     const result = await updateProduct({ _id: id }, { $inc: { stock: -stockAReducir } });
 
                     const subtotal = stockAReducir * item.product.price;
                     totalCarrito += subtotal;
                     cantidadItems += item.quantity;
-                    console.log('Entro en el if');
                 } else {
                     arrayCartPendientes.push(item);
                     cartItemsSinStock.push(item.product._id);
@@ -255,16 +253,24 @@ router.post('/:cid/purchase', checkSession, async (req, res) => {
 
         const newTicket = {
             amount: totalCarrito,
-            purchaser: "EstebanCoder"
+            purchaser: req.session.user._id
         };
                 
         const ticketCompra = await addTicket(newTicket); /// GENERAR TICKET
 
+        const idticketCompra = ticketCompra.code;
+
         const prodSinComprar = await updateProductsInCart(cid, arrayCartPendientes);
-        res.send({
+        return res.status(200).json({
             result: 'success',
-            payload: cartItemsSinStock
+            payload: cartItemsSinStock,
+            ticket: idticketCompra
         });
+        // res.send({
+        //     result: 'success',
+        //     payload: cartItemsSinStock,
+        //     ticket: ticketCompra.code
+        // });
 
     } catch (error) {
         req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
