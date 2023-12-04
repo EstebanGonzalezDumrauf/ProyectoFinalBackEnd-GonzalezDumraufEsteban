@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import {
     getProductsByID
 } from '../controllers/products.js';
-import {checkSession, checkAdmin} from "../config/passport.js";
+import { checkSession, checkAdmin } from "../config/passport.js";
 
 
 import CustomError from '../services/errors/CustomError.js';
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
             CustomError.createError({
                 name: 'Errores en los parámetros Limit y Page',
                 cause: generatePaginateErrorInfo({ limit, page }),
-                message: 'Los parámetros limit y page deben ser números válidos y mayores que cero', 
+                message: 'Los parámetros limit y page deben ser números válidos y mayores que cero',
                 code: EErrors.INVALID_TYPES_ERROR
             });
 
@@ -148,7 +148,7 @@ router.post('/', async (req, res) => {
                     owner,
                     stock
                 }),
-                message: 'Falta ingresar el title o el code del producto ', 
+                message: 'Falta ingresar el title o el code del producto ',
                 code: EErrors.INVALID_TYPES_ERROR
             });
 
@@ -196,53 +196,115 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:pid', async (req, res) => {
+    try {
+        let datosAUpdate = req.body;
+        let { pid } = req.params;
 
-    let datosAUpdate = req.body;
-    let {
-        pid
-    } = req.params;
+        let result = await productModel.updateOne({ _id: pid }, datosAUpdate);
 
-    // const producto = await getProductsByID(pid)
+        // const producto = await getProductsByID(pid)
 
-    // if (!producto) {
-    //     return res.status(404).json({
-    //         result: 'error',
-    //         message: 'Producto no encontrado'
-    //     });
-    // }
+        // if (!producto) {
+        //     return res.status(404).json({
+        //         result: 'error',
+        //         message: 'Producto no encontrado'
+        //     });
+        // }
 
-    // if ((!req.session.user && req.session.user.rol !== 'admin') || 
-    // (!req.session.user && req.session.user.email !== producto.owner)) {
-    //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
-    //     return res.status(401).send({
-    //         status: "Error",
-    //         error: 'No autorizado'
-    //     });
-    // }
+        // if ((!req.session.user && req.session.user.rol !== 'admin') || 
+        // (!req.session.user && req.session.user.email !== producto.owner)) {
+        //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+        //     return res.status(401).send({
+        //         status: "Error",
+        //         error: 'No autorizado'
+        //     });
+        // }
 
-    // console.log(req.session.user);
-    // {
-    //     _id: '655377cde55773f7b67f82d8',
-    //     first_name: 'Esteban',
-    //     last_name: 'Gonzalito',
-    //     email: 'esteban_a_gd@hotmail.com',
-    //     age: 44,
-    //     password: '$2b$10$iMFRdQh0Ueywy0BUemcEru26ucmBhPzlr1E.VcKLrMmBdDBhj66.6',
-    //     cart: '64fcae446abbc5ebaf62c79a',
-    //     rol: 'usuario',
-    //     fecha_ultima_conexion: '2023-11-17T14:37:42.270Z',
-    //     __v: 0
-    //   }
+        // console.log(req.session.user);
+        // {
+        //     _id: '655377cde55773f7b67f82d8',
+        //     first_name: 'Esteban',
+        //     last_name: 'Gonzalito',
+        //     email: 'esteban_a_gd@hotmail.com',
+        //     age: 44,
+        //     password: '$2b$10$iMFRdQh0Ueywy0BUemcEru26ucmBhPzlr1E.VcKLrMmBdDBhj66.6',
+        //     cart: '64fcae446abbc5ebaf62c79a',
+        //     rol: 'usuario',
+        //     fecha_ultima_conexion: '2023-11-17T14:37:42.270Z',
+        //     __v: 0
+        //   }
 
-    let result = await productModel.updateOne({
-        _id: pid
-    }, datosAUpdate);
+        res.status(200).send({
+            result: 'success',
+            payload: result
+        });
+    } catch (error) {
+        if (error.code === 11000) {
+            // Manejar el error de clave duplicada
+            res.status(400).json({
+                result: 'error',
+                message: 'Ya existe un producto con el mismo código.'
+            });
+        } else {
+            // Manejar otros errores
+            res.status(500).json({
+                result: 'error',
+                message: 'Error interno del servidor.'
+            });
+        }
+    }
+});
 
-    res.status(200).send({
-        result: 'sucess',
-        payload: result
-    });
-})
+
+
+// router.put('/:pid', async (req, res) => {
+
+//     let datosAUpdate = req.body;
+//     let {
+//         pid
+//     } = req.params;
+
+//     // const producto = await getProductsByID(pid)
+
+//     // if (!producto) {
+//     //     return res.status(404).json({
+//     //         result: 'error',
+//     //         message: 'Producto no encontrado'
+//     //     });
+//     // }
+
+//     // if ((!req.session.user && req.session.user.rol !== 'admin') || 
+//     // (!req.session.user && req.session.user.email !== producto.owner)) {
+//     //     req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+//     //     return res.status(401).send({
+//     //         status: "Error",
+//     //         error: 'No autorizado'
+//     //     });
+//     // }
+
+//     // console.log(req.session.user);
+//     // {
+//     //     _id: '655377cde55773f7b67f82d8',
+//     //     first_name: 'Esteban',
+//     //     last_name: 'Gonzalito',
+//     //     email: 'esteban_a_gd@hotmail.com',
+//     //     age: 44,
+//     //     password: '$2b$10$iMFRdQh0Ueywy0BUemcEru26ucmBhPzlr1E.VcKLrMmBdDBhj66.6',
+//     //     cart: '64fcae446abbc5ebaf62c79a',
+//     //     rol: 'usuario',
+//     //     fecha_ultima_conexion: '2023-11-17T14:37:42.270Z',
+//     //     __v: 0
+//     //   }
+
+//     let result = await productModel.updateOne({
+//         _id: pid
+//     }, datosAUpdate);
+
+//     res.status(200).send({
+//         result: 'sucess',
+//         payload: result
+//     });
+// })
 
 router.delete('/:pid', async (req, res) => {
 
