@@ -64,9 +64,8 @@ describe('Session Router Tests', () => {
                     username: 'esteban_a_gd@hotmail.com',
                     password: '1234'
                 }); 
-                console.log(response.session);
-            // assert.equal(response.status, 200);
-            // assert.equal(response.body.status, 'success');
+            //assert.equal(response.status, 200);
+            //assert.equal(response.body.status, 'success');
             // assert.property(response.body.payload, 'username'); // Ajusta según la estructura de tu usuario
         });
 
