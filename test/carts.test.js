@@ -44,5 +44,4 @@ describe('Cart Router Tests', () => {
         });
     });
 
-    // Agrega más pruebas según sea necesario para otros endpoints del router
 });
