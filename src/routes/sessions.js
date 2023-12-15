@@ -26,6 +26,7 @@ import {
     checkSession,
     checkAdmin
 } from "../config/passport.js";
+import { uploader } from "../utils.js";
 
 const router = Router();
 
@@ -240,15 +241,58 @@ router.post('/premium/:uid', async (req, res) => {
     } = req.params;
     const user = await getUserById(uid);
     console.log('de la BD', user, uid);
-    const email = user.email;
+
+    const requiredDocuments = ['IDENTI', 'DOMI', 'CUENTA'];
+    const hasRequiredDocuments = requiredDocuments.every(doc => user.documents.some(d => d.name === doc));
 
     if (user.rol === 'usuario') {
+        if (!hasRequiredDocuments) {
+            return res.status(400).json({
+                error: 'El usuario  no ha terminado de procesar su solicitud'
+            });
+        }
         user.rol = 'premium'
-        //console.log('actualizada', user, uid);
     } else if (user.rol === 'premium') {
         user.rol = 'usuario'
-        //console.log('actualizada', user, uid);
     }
+
+    const result = await updateUser(user);
+
+    if (result) {
+        res.status(200).json({
+            message: `${user} actualizado`
+        });
+    } else {
+        res.status(400).json({
+            error: 'Se produjo un error al intentar cambiar el rol del usuario'
+        });
+    }
+});
+
+router.post('/:uid/documents', uploader.single('file'), async (req, res) => {
+    const {
+        uid
+    } = req.params;
+
+    const {
+        type,
+        name
+    } = req.body;
+
+    console.log('entro al EP');
+
+    const user = await getUserById(uid);
+    console.log('de la BD', user, uid);
+
+    const fileLink = req.file ? req.file.path : null; // Obtén el enlace del archivo
+
+    if (fileLink) {
+        user.documents.push({ name, reference: fileLink });
+    }
+    
+    user.status = "uploaded";
+    console.log(fileLink);
+    console.log(user);
 
     const result = await updateUser(user);
 

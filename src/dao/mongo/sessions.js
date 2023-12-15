@@ -58,7 +58,9 @@ export const update_User = async (user) => {
             { 
                 $set: { 
                     rol: user.rol,
-                    fecha_ultima_conexion: user.fecha_ultima_conexion 
+                    fecha_ultima_conexion: user.fecha_ultima_conexion,
+                    documents: user.documents,
+                    status: user.status
                 }
             }
         );

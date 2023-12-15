@@ -3,11 +3,37 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { fakerES_MX } from '@faker-js/faker';
+import multer from 'multer';
+import { createBrotliCompress } from 'zlib';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirName = dirname(__filename);
 
 const PRIVATE_KEY = "KeyQueFuncionaComoSecretJWT";
+
+const storage = multer.diskStorage({
+    
+    destination: (req, file, cb) => {
+
+        console.log('Tipo de archivo:', req.body.type);
+
+        if (req.body.type == 'profile') {
+            cb(null, `${__dirName}/public/profiles`)
+        } else if (req.body.type == 'product') {
+            cb(null, `${__dirName}/public/products`)
+        } else if (req.body.type == 'document') {
+            cb(null, `${__dirName}/public/documents`)
+        }       
+    },
+    filename: (req, file, cb) => {
+        console.log(file);
+        cb(null, `${Date.now()}-${file.originalname}`)
+    }
+})
+
+
+export const uploader = multer({storage})
 
 export const generateProducts = () => {
     const numOfProducts = 100;

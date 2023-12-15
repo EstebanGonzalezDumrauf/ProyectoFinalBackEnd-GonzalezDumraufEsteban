@@ -6,7 +6,8 @@ export default class UserDTO {
         this.age = user.age,
         //this.password = user.password,
         this.cart = user.cart,
-        this.rol = user.rol;
+        this.rol = user.rol,
+        this.documents = user.documents;
         //this.telefono = contact.telefono ? contact.telefono.split('-').join('') : '';
     }
 }

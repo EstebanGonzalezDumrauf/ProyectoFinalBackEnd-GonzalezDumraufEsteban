@@ -23,6 +23,23 @@ const schema = new mongoose.Schema({
         type: String,
         default: "usuario"
     },
+    status: { 
+        type: String, 
+        default: "Empty" 
+    },
+    documents: {
+        type: [
+            {
+                name: {
+                    type: String
+                },
+                reference: {
+                    type: String
+                },
+            }
+        ],
+        default: []
+    }
 });
 
 export const userModel = mongoose.model(collection, schema)
