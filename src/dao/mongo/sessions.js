@@ -34,7 +34,7 @@ export const delete_User = async (_id) => {
 export const delete_Users = async () => {
     try {
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 2);
 
         const deletedUsers = await userModel.find({
             fecha_ultima_conexion: { $lt: sevenDaysAgo }

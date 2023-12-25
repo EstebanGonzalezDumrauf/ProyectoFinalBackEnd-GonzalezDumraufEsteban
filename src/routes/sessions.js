@@ -27,6 +27,7 @@ import {
     checkAdmin
 } from "../config/passport.js";
 import { uploader } from "../utils.js";
+import { getAllUser } from "../dao/mongo/sessions.js";
 
 const router = Router();
 
@@ -47,6 +48,34 @@ router.get('/failLoginGit', (req, res) => {
     });
 });
 
+
+router.get('/users', async (req, res) => {
+    try {
+        let listado = []; 
+        
+        listado = await getAllUser();
+
+        listado = listado.map(user => {
+            const { first_name, last_name, email, rol } = user._doc;
+            return { first_name, last_name, email, rol };
+        });
+
+        if (listado) {
+            res.send({
+                status: "success",
+                payload: listado
+            });
+        } else {
+            res.send({
+                status: "Empty",
+                payload: listado
+            });
+        }
+
+    } catch (error) {
+        req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
+    }
+});
 
 router.get('/current', (req, res) => {
     // Crea un nuevo objeto UserDTO a partir de req.user
