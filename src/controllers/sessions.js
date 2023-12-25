@@ -106,7 +106,7 @@ export const deleteInactiveUsers = async () => {
             from: 'gribsserversiag@gmail.com',
             to: user.email,
             subject: 'Cuenta eliminada por inactividad',
-            text: 'Tu cuenta ha sido eliminada debido a la falta de actividad en los últimos 7 días.'
+            text: 'Tu cuenta ha sido eliminada debido a la falta de actividad en los últimos 2 días.'
         };
 
         try {

@@ -6,6 +6,7 @@ import {
 } from '../models/product.js';
 import mongoose from 'mongoose';
 import {
+    deleteProductPremium,
     getProductsByID
 } from '../controllers/products.js';
 import { checkSession, checkAdmin } from "../config/passport.js";
@@ -14,6 +15,7 @@ import { checkSession, checkAdmin } from "../config/passport.js";
 import CustomError from '../services/errors/CustomError.js';
 import EErrors from '../services/errors/enums.js';
 import { generatePaginateErrorInfo, generateProductErrorInfo } from '../services/errors/info.js';
+import { getUser } from '../controllers/sessions.js';
 
 
 const router = Router();
@@ -312,14 +314,33 @@ router.delete('/:pid', async (req, res) => {
         pid
     } = req.params;
 
-    // const producto = await getProductsByID(pid)
+    const producto = await getProductsByID(pid)
 
-    // if (!producto) {
-    //     return res.status(404).json({
-    //         result: 'error',
-    //         message: 'Producto no encontrado'
-    //     });
-    // }
+    if (!producto) {
+        return res.status(404).json({
+            result: 'error',
+            message: 'Producto no encontrado'
+        });
+    }
+
+    const ownerProduct = producto.owner;
+console.log("ownerProduct", ownerProduct);
+
+    if (ownerProduct !== "admin") {
+        const userProduct = await getUser(ownerProduct);
+
+        console.log("userProduct.rol ", userProduct.rol);
+
+        if (userProduct.rol === "premium") {    
+            const result = await deleteProductPremium(pid, ownerProduct);
+            return res.send({
+                result: 'sucess',
+                payload: result
+            });
+        }
+    }
+
+
 
     // if ((!req.session.user && req.session.user.rol !== 'admin') || 
     // (!req.session.user && req.session.user.email !== producto.owner)) {

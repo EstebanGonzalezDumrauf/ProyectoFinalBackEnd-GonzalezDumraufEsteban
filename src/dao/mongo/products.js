@@ -11,3 +11,13 @@ export const get_Product_By_ID = async (pid) => {
 export const update_Product = async (filter, DatosAUpdate) => {
     return await productModel.updateOne(filter, DatosAUpdate);
 }
+
+export const delete_Product = async (pid) => {
+    try {
+        const product = await productModel.deleteOne({ _id: pid });
+    } catch (error) {
+        return false;
+    }
+
+    return true;
+};

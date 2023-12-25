@@ -90,15 +90,15 @@ router.put('/:cid/products/:pid', async (req, res) => {
 
         // Verifica si el producto ya está en el carrito
         if (cartExistente && Array.isArray(cartExistente.arrayCart)) {
-            const productoEnCarrito = cartExistente.arrayCart.find(elto => elto.product.equals(productId)); // Comparar utilizando .equals()
+            const productoEnCarrito = cartExistente.arrayCart.find(elto => elto.product.equals(productId)); 
 
             if (productoEnCarrito) {
-                const quantitySumada = productoEnCarrito.quantity + cantidad;
+                const quantitySumada = productoEnCarrito.quantity + cantidadvALOR;
                 // Si ya existe, agregar la cantidad proporcionada en el cuerpo
                 productoEnCarrito.quantity = quantitySumada;
             } else {
                 // Si el producto no está en el carrito, agregarlo con la cantidad proporcionada en el cuerpo
-                cartExistente.arrayCart.push({ product: productId, quantity: cantidad });
+                cartExistente.arrayCart.push({ product: productId, quantity: cantidadvALOR });
             }
 
             // Guardar el carrito actualizado
