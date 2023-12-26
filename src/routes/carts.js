@@ -266,11 +266,6 @@ router.post('/:cid/purchase', checkSession, async (req, res) => {
             payload: cartItemsSinStock,
             ticket: idticketCompra
         });
-        // res.send({
-        //     result: 'success',
-        //     payload: cartItemsSinStock,
-        //     ticket: ticketCompra.code
-        // });
 
     } catch (error) {
         req.logger.error(`${error} - ${req.method} en ${req.url} - ${new Date().toLocaleDateString()} `);
